@@ -1,0 +1,12 @@
+procname=mspaint
+offset_top=25
+offset_left=8
+//width=1152
+width=720
+//width=360
+//height=720
+height=480
+//height=240
+// preview: 0=off, 1=full, 2=half
+preview=0
+timeout=0
