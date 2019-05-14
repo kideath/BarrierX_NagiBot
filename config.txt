@@ -1,12 +1,18 @@
-procname=mspaint
-offset_top=25
-offset_left=8
-//width=1152
-width=720
-//width=360
-//height=720
+procname=BarrierX
+//procname=mspaint
+//offset_top=25+1
+//offset_left=8-5
+offset_top=26
+offset_left=3
+// static 640x480
+width=640
 height=480
-//height=240
-// preview: 0=off, 1=full, 2=half
-preview=0
+// preview: 0=off, 1=debug, 2=half, 4=full+layers
+preview=1
 timeout=0
+// 0=off, 1=errors, 2=decisions, 4=trace
+debug_save_frames=0
+// 0 or false=off, 1= on
+debug_no_controls=0
+ocr_font_dir = d:\src\_workdir\VisualStudio2017\BarrierX_NagiBot\ocr_data_36_set
+auto_restart = 0

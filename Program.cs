@@ -81,61 +81,84 @@ namespace BarrierX_NagiBot
         //public static string folder2 = @"c:\Users\valentin.kovrov\OneDrive\OpenCV\sample\";
         //public static string folder3 = @"d:\src\NagiBot_BarrierX\";
 
-        public static string configProcname = @"LSS";
-        //public static int configX = 0;
-        //public static int configY = 0;
-        public static int configOffsetTop = 0;
-        public static int configOffsetLeft = 0;
-        public static int configWidth = 1280;
-        public static int configHeight = 720;
-        public static int configPreview = 0;
-        public static int configTimeout = 50;
 
-        public static Point screenCenter;
-        public static Point screenLeft;
-        public static Point screenRight;
 
-        public static int ReadConfig(string configFilename)
+        //public static float proportionX = configWidth / 1280f;
+        //public static float proportionY = configHeight / 720f;
+
+
+
+
+
+        static void Sandbox()
         {
-            string path = configFilename;
-            if (!File.Exists(path))
-            {
-                path = "..\\..\\" + path; // for Debug Release folders
-                if (!File.Exists(path))
-                {
-                    return -1;
-                }
-            }
-
-            // https://stackoverflow.com/questions/7980456/reading-from-a-text-file-in-c-sharp
-            using (var reader = new StreamReader(path))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    // Do stuff with your line here, it will be called for each 
-                    // line of text in your file.
-                    string[] arr = line.Split(new char[] { '=' });
-                    if (arr.Length == 2)
-                    {
-                        string key = arr[0].Trim();
-                        string value = arr[1].Trim();
-                        if (key.Equals("procname")) { configProcname = value; }
-                        //else if (key.Equals("x")) { configX = Convert.ToInt32(value); }
-                        //else if (key.Equals("y")) { configY = Convert.ToInt32(value); }
-                        else if (key.Equals("width")) { configWidth = Convert.ToInt32(value); }
-                        else if (key.Equals("height")) { configHeight = Convert.ToInt32(value); }
-                        else if (key.Equals("offset_top")) { configOffsetTop = Convert.ToInt32(value); }
-                        else if (key.Equals("offset_left")) { configOffsetLeft = Convert.ToInt32(value); }
-                        else if (key.Equals("preview")) { configPreview = Convert.ToInt32(value); }
-                        else if (key.Equals("timeout")) { configTimeout = Convert.ToInt32(value); }
-                    }
-                }
-
-                //Console.WriteLine("procname=" + configProcname + ", x=" + configX + ", y=" + configY + ", timeout=" + configTimeout);
-            }
-
-            return 1;
+//            Mat dest2 = dest.Clone();
+//            // 540 x 360
+//            Point center1 = new Point(270, 180);
+//            Point pt1 = new Point(80, 300);
+//            Point pt2 = new Point(480, 300);
+//            //Cv2.Circle()
+//
+//
+//            Mat imgGray = new Mat();
+//            Cv2.CvtColor(dest, imgGray, ColorConversionCodes.BGR2GRAY, 0);
+//            //Cv2.Threshold()
+//
+//            // color thresh
+//            Mat gray_thresh = new Mat();
+//            int delta = 5;
+//
+//            Cv2.InRange(imgGray, new Scalar(174 - delta), new Scalar(174 + delta), gray_thresh);
+//            //Cv2.Erode(gray_thresh, gray_thresh, 4);
+//            Cv2.Dilate(gray_thresh, gray_thresh, 4);
+//            Cv2.ImShow("gray_thresh", gray_thresh);
+//
+//            //Samples.ConnectedComponentsSample(dest);
+//            //Samples.DFT(dest);
+//            //Samples.HoughLinesSample(dest, imgGray);
+//            Samples.PhotoMethods(dest);
+//
+//
+//            Cv2.ImShow("rotated Gray", imgGray);
+//
+//            /*
+//            KeyPoint[] keypoints = Cv2.FAST(imgGray, 50, true);
+//
+//            foreach (KeyPoint kp in keypoints)
+//            {
+//                dest2.Circle((Point)kp.Pt, 3, Scalar.Red, -1, LineTypes.AntiAlias, 0);
+//            }
+//            // */
+//
+//            BRISK brisk = BRISK.Create();
+//            KeyPoint[] keypoints = brisk.Detect(imgGray);
+//
+//            if (keypoints != null)
+//            {
+//                var color = new Scalar(0, 255, 0);
+//                foreach (KeyPoint kpt in keypoints)
+//                {
+//                    float r = kpt.Size / 2;
+//                    Cv2.Circle(dest2, (Point)kpt.Pt, (int)r, color);
+//                    Cv2.Line(dest2,
+//                        (Point)new Point2f(kpt.Pt.X + r, kpt.Pt.Y + r),
+//                        (Point)new Point2f(kpt.Pt.X - r, kpt.Pt.Y - r),
+//                        color);
+//                    Cv2.Line(dest2,
+//                        (Point)new Point2f(kpt.Pt.X - r, kpt.Pt.Y + r),
+//                        (Point)new Point2f(kpt.Pt.X + r, kpt.Pt.Y - r),
+//                        color);
+//                }
+//            }
+//
+//
+//            Cv2.Circle(dest2, center1, 5, new Scalar(255, 255, 0), -1); // purple
+//            Cv2.Line(dest2, center1, pt1, new Scalar(255, 255, 0), 1); // purple)
+//            Cv2.Line(dest2, center1, pt2, new Scalar(255, 255, 0), 1); // purple)
+//            Cv2.ImShow("rotated ed", dest2);
+//
+//            dest.Release();
+//            imgGray.Release();
         }
 
         [STAThread]
@@ -147,65 +170,65 @@ namespace BarrierX_NagiBot
             Console.SetCursorPosition(0, 0);
             // Console.ReadKey();
 
-            Console.WriteLine("Nagibot for BarrierX by k1death, v2.0");
+            Console.WriteLine("Nagibot for BarrierX by k1death, v2.1.0");
             string configFilename = "config.txt";
             if (args.Length == 1)
             {
                 configFilename = args[0];
             }
 
-            int res= ReadConfig(configFilename);
+            Config config = new Config();
+            int res= config.ReadConfig(configFilename);
             if (res != 1) {
                 Console.WriteLine("file not exist: " + configFilename);
                 Console.WriteLine("usage: NagiBot <config_filename.txt>");
                 return;
             }
 
-            
-
-            //int width = 1280; // Ширина ROI
-            //int height = 720; // Высота ROI
-            //Mat img = new Mat(new OpenCvSharp.Size(screen_width, screen_height), MatType.CV_8UC3);
-            //Cv2.NamedWindow("DisplayPicture", WindowMode.AutoSize);
-            //Cv2.NamedWindow("win0", WindowMode.AutoSize);
-            //Cv2.NamedWindow("win1", WindowMode.AutoSize);
-            //Cv2.NamedWindow("win2", WindowMode.AutoSize);
-            //Cv2.NamedWindow("win3", WindowMode.AutoSize);
-            //Cv2.NamedWindow("win4", WindowMode.AutoSize);
-            //Cv2.PutText(img, "HELLO, World", new OpenCvSharp.Point(110, 110), HersheyFonts.HersheyScriptSimplex, 1, new Scalar(220.7, 0.1, 0.1));
-            //Cv2.ImShow("DisplayPicture", img);
-            //Cv2.WaitKey();
-            //img.Release();
-            //Cv2.DestroyWindow("DisplayPicture");
-            //Mat img2 = Cv2.ImRead("d:\\Action!\\BarrierX_1.jpg", ImreadModes.Color);
-            //Console.WriteLine(img2.);
-
-
             try
             {
                 //proc = Process.GetProcessesByName("BarrierX")[0];
-                proc = Process.GetProcessesByName(configProcname)[0];
+                proc = Process.GetProcessesByName(config.Procname)[0];
                 //int screenshot_num = 0;
                 //int skip = 0;
 
-                float proportionX = configWidth / 1280f;
-                float proportionY = configHeight / 720f;
-                screenCenter = new Point(configWidth / 2, configHeight / 2);
-                screenLeft = new Point(0, configHeight / 2);
-                screenRight = new Point(configWidth, configHeight / 2);
-
+                bool b_init = false;
                 int fps = 0;
                 int fps_calc = 0;
                 long fps_time = 0;
                 long fps_time_dif = 0;
-                Mat img_debug = new Mat();
-                bool skip = false;
 
-                string[] samples = {"1.png", "mini.png", "3.png", "red.png", "red2.png",
-                           "blue.png", "4.png", "crash2.png", "0.png", "boost.png",
-                           "5.png", "6.png", "7.png", "8.png", "ct_size.png",
-                           "hard.png", "hard2.png", "", "", "",
+                bool skip = false;
+                int debug_frames_count = 0;
+                long debug_frame_time = 0;
+                long debug_next_frame_delay = 500; // millisec
+                OCR ocr = new OCR();
+                ocr.Init(config.OCRFontDir);
+
+                //         public static Scalar[] colors;
+                /*        public static Scalar ;
+                        public static Scalar color_green;
+                        public static Scalar color_blue;
+                        public static Scalar color_purple;
+                         */
+
+
+
+                string[] samples = {"", "", "screen0070_right.png", "screen0021__linecenter.png", "screen0023__linecenter.png",
+                            "screen0032__lineleft.png", "screen0015.png", "screen0001__linecenter.png", "screen0025.png", "screen0200.png",
+                            //"screen0676.png", "screen0736.png", "screen0787.png", "screen0801.png", "screen0864.png", "screen0883.png", "screen0888.png", "screen0903.png", "", "",
+                            "screen0019_right.png", "screen0076.png", "screen0073_left.png", "screen0148_right.png", "screen0265_right.png", "screen0327_right.png", "screen0344.png", "screen0349.png",
+                            "screen0044__linecenter.png", "", "", "", "",
                 };
+
+                long ocr_last_ostime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                long ocr_digits = 0;
+                long ocr_digits_calc = 0;
+                ocr_digits = 0;
+
+                //FillLineDetector detector = new FillLineDetector();
+                RotatedLineDetector detector = new RotatedLineDetector();
+
 
                 while (true)
                 {
@@ -214,118 +237,124 @@ namespace BarrierX_NagiBot
 
                     Console.SetCursorPosition(0, 2);
                     //Mat img = grab_screen_GetPixelColors();
-                    Mat img = grab_screen2();
-                    //Mat img = Cv2.ImRead(@"c:\Users\valentin.kovrov\Pictures\BarrierX 16-03-2018 21-17-08.mp4_snapshot_00.04_[2018.06.15_13.19.13].png", ImreadModes.Color);
-                    //Mat img = Cv2.ImRead(@"c:\Users\valentin.kovrov\Pictures\1\19.19.png", ImreadModes.Color);
-                    //Mat img = Cv2.ImRead(@"d:\src\BarrierX_NagiBot\sample\BarrierX 20-01-2018 22-02-33.mp4_snapshot_05.23_[2018.06.16_15.20.02].png", ImreadModes.Color);
-                    //Mat img = Cv2.ImRead(folder2 + "BarrierX boost.png", ImreadModes.Color);
-                    //Mat img = Cv2.ImRead(@"d:\src\_workdir\PycharmProjects\PyNagiBot\sample\"+ samples[2], ImreadModes.Color);
-                    Console.WriteLine($"check: width = {configWidth} | {img.Cols}, height = {configHeight} | {img.Rows}, type = {img.Type()}");
-                    if (img.Type() != MatType.CV_8UC3) {
+                    Mat img = grab_screen2(config);
+                    //Mat img = Cv2.ImRead(@"d:\src\NagiBot_BarrierX\sample\640x480_4\" + samples[15], ImreadModes.Color);
+                    Console.WriteLine($"check: width = {config.Width} | {img.Cols}, height = {config.Height} | {img.Rows}, type = {img.Type()}   ");
+
+                    // init
+                    if (config.Width != img.Cols || config.Height != img.Rows || !b_init)
+                    {
+                        config.Width = img.Cols;
+                        config.Height = img.Rows;
+                        //proportionX = configWidth / 1280f;
+                        //proportionY = configHeight / 720f;
+
+                        detector.Init(ocr, config);
+
+                        b_init = true;
+                    }
+
+                    if (img.Type() != MatType.CV_8UC3)
+                    {
                         Mat tmp = img.CvtColor(ColorConversionCodes.BGRA2BGR);
                         img.Release();
                         img = tmp;
                     }
 
-                    if (configPreview != 0) {
-                        img.CopyTo(img_debug);
+                    if (config.Preview == 4)
+                    {
+                        Cv2.ImShow("source", img);
+                        //Samples.Gradient(img);
+                    }
+
+                    if (config.DebugSaveFrames == 4 && time1 - debug_frame_time > debug_next_frame_delay)
+                    {
+                        img.ImWrite(String.Format("screen{0:d4}.png", debug_frames_count));
+                        //if (configPreview > 0) { img_debug.ImWrite(String.Format("screen{0:d4}_debug.png", debug_frames_count)); }
+                        debug_frames_count++;
+                        debug_frame_time = time1;
+                    }
+
+
+                    if (ocr_digits_calc >= 1500)
+                    {
+                        int sizeX = 15;
+                        if (ocr_digits_calc >= 13500) sizeX = 190;
+                        else if (ocr_digits_calc >= 12000) sizeX = 170;
+                        else if (ocr_digits_calc >= 10500) sizeX = 150;
+                        else if (ocr_digits_calc >= 9000) sizeX = 130;
+                        else if (ocr_digits_calc >= 7500) sizeX = 110;
+                        else if (ocr_digits_calc >= 6000) sizeX = 100;
+                        else if (ocr_digits_calc >= 4500) sizeX = 70;
+                        else if (ocr_digits_calc >= 3000) sizeX = 40;
+                        //else if (ocr_digits_calc >= 1500) sizeX = 15;
+                        // crop
+                        // https://github.com/VahidN/OpenCVSharp-Samples/blob/master/OpenCVSharpSample19/Program.cs
+                        //double ratio = config.Height / config.Width;
+                        int sizeY = (int)(sizeX * ((double)config.Height / (double)config.Width));
+                        //Rect roi = new Rect(size, (int)(size * ratio), 540 - size * 2, 360 - (int)(size * ratio) * 2);
+                        Rect roi = new Rect(sizeX, sizeY, config.Width - sizeX * 2, config.Height - sizeY * 2);
+                        Console.WriteLine($"ROI={roi.Left}, {roi.Top}, {roi.Width}, {roi.Height}, sizeX={sizeX}, sizeY={sizeY}   ");
+                        var cropped = new Mat(img, roi); //Crop the image
+                        Mat resized2 = new Mat();
+                        //Cv2.CvtColor(barcode, barcode, ColorConversionCodes.BGRA2GRAY);
+                        //Cv2.Resize(cropped, resized2, new Size(540, 360), 0, 0, InterpolationFlags.Lanczos4);
+                        Cv2.Resize(cropped, resized2, new Size(config.Width, config.Height), 0, 0, InterpolationFlags.Lanczos4);
+                        //img.Release();
+                        //img = resized;
+
+                        if (config.Preview == 4) Cv2.ImShow("cropped", cropped);
+                        if (config.Preview == 4) Cv2.ImShow("resized2", resized2);
+                        img.Release();
+                        cropped.Release();
+                        img = resized2;
+                        // */
+                    }
+
+                    detector.ProcessFrame(img);
+                    if (!detector.isGameOver)
+                    {
+                        if (ocr.ocrTimerText.Length >= 4 
+                            && Math.Abs(ocr.ocrTimerN - ocr_digits_calc) < 1000) // FIX для неправильно распознанного нуля
+                        {
+                            ocr_digits = ocr.ocrTimerN;
+                            ocr_last_ostime = time1;
+                            ocr_digits_calc = ocr_digits;
+                        }
+                        else
+                        {
+                            ocr_digits_calc = (time1 - ocr_last_ostime) / 10 + ocr_digits;
+                        }
+                    }
+                    else {
+                        ocr_last_ostime = time1;
+                        ocr_digits_calc = ocr_digits = 0;
+                    }
+
+                    Player player = detector.GetPlayer();
+                    Line line_center= detector.GetLineCenter();
+                    Line line_left = detector.GetLineLeft();
+                    Line line_right= detector.GetLineRight();
+                    Mat img_debug = null;
+                    img_debug = detector.Get_img_debug();
+
+                    if (player == null || line_left == null || line_center == null || line_right == null) { skip = true; }
+
+                    if (config.DebugSaveFrames == 1 && time1 - debug_frame_time > debug_next_frame_delay)
+                    {
+                        string reason = "";
+                        if (player == null) reason += "_player";
+                        else if (line_center == null) reason += "_linecenter";
+                        else if (line_left == null) reason += "_lineleft";
+                        else if (line_right == null) reason += "_lineright";
+                        if (reason.Length > 0) {
+                            img.ImWrite(String.Format("screen{0:d4}_{1}.png", debug_frames_count, reason));
+                            debug_frames_count++;
+                            debug_frame_time = time1;
+                        }
                     }
 
                     
-                    List<GameObject> list_obj = FindByWhiteMask(img, img_debug); // определение белых контуров
-                    Player player = FindPlayer(list_obj);  // поиск игрока
-
-                    if (player != null)
-                    {
-                        if (configPreview > 0) {
-                            Cv2.Circle(img_debug, player.pt_up, 5, new Scalar(255, 255, 0), -1); // purple
-                            Cv2.Circle(img_debug, player.pt_left, 5, new Scalar(255, 0, 153), -1); // light blue
-                            Cv2.Circle(img_debug, player.pt_right, 5, new Scalar(100, 0, 255), -1); // pink
-                        }
-                        Console.WriteLine($"Player found at {player.center}");
-                    }
-                    else {
-                        Console.WriteLine("SKIP: player not found");
-                        skip = true;
-                    }
-                    //rgb(153, 0, 255)
-
-
-                    Line line_center = null;
-                    if (!skip) {
-                        // в зависимости от положения коробля определяю точку для определения линии
-                        Point diff = new Point(player.pt_up.X, player.pt_up.Y - 10);
-                        if (diff.X > screenCenter.X) { diff.X -= 10; }
-                        else { diff.X += 10; }
-
-                        if (diff.X >= 0 && diff.X <= configWidth
-                            && diff.Y >= 0 && diff.Y <= configHeight)
-                        {
-                            line_center = FindLine(img, diff, img_debug);
-                        }
-                        else {
-                            Console.WriteLine("SKIP: line center");
-                            skip = true;
-                        }
-                            
-                    }
-
-                    // считаю середину слева
-                    Line line_left = null;
-                    if (!skip) {
-                        Point mid_left = new Point(
-                            (line_center.pt_up.X + line_center.pt_left.X) / 2,
-                            (line_center.pt_up.Y + line_center.pt_left.Y) / 2);
-
-                        // смещаю линию на 10 пикселей вверх и вбок
-                        mid_left.X -= 30;
-                        mid_left.Y -= 30;
-                        
-                        if (mid_left.X >= 0 && mid_left.X <= configWidth
-                            && mid_left.Y >= 0 && mid_left.Y <= configHeight)
-                        {
-                            if (configPreview > 0) { Cv2.Circle(img_debug, mid_left, 8, new Scalar(20, 70, 25), -1); }
-                            line_left = FindLine(img, mid_left, img_debug);
-                        }
-                        else {
-                            Console.WriteLine("SKIP: line left");
-                            skip = true;
-                        }
-
-                        
-                    }
-
-                    // считаю середину справа
-                    Line line_right = null;
-                    if (!skip)
-                    {
-                        Point mid_right = new Point(
-                            (line_center.pt_up.X + line_center.pt_right.X) / 2,
-                            (line_center.pt_up.Y + line_center.pt_right.Y) / 2);
-
-                        // смещаю линию на 10 пикселей вверх и вбок
-                        mid_right.X += 30;
-                        mid_right.Y -= 30;
-
-                        if (mid_right.X >= 0 && mid_right.X <= configWidth
-                            && mid_right.Y >= 0 && mid_right.Y <= configHeight)
-                        {
-                            if (configPreview > 0) { Cv2.Circle(img_debug, mid_right, 8, new Scalar(20, 70, 25), -1); }
-                            line_right = FindLine(img, mid_right, img_debug);
-                        }
-                        else {
-                            Console.WriteLine("SKIP: line right");
-                            skip = true;
-                        }
-                        
-                    }
-
-                    if (!skip && configPreview > 0) {
-                        DrawLineColorBox(img_debug, 0, line_left.color);
-                        DrawLineColorBox(img_debug, 1, line_center.color);
-                        DrawLineColorBox(img_debug, 2, line_right.color);
-                    }
-
 
                     int c = Cv2.WaitKey(1);
 
@@ -338,8 +367,24 @@ namespace BarrierX_NagiBot
 
                     //Clean
                     //Console.SetCursorPosition(0, 0);/*
-                    Console.WriteLine($"proportionX= {proportionX}, proportionY= {proportionY}          ");
+                    //Console.WriteLine($"proportionX= {proportionX}, proportionY= {proportionY}          ");
                     Console.WriteLine($"Frame takes(ms)={time2,3}, fps={fps,3}, time(ms)= {fps_time_dif,4}              ");
+                    //detector.is
+
+                    if (config.Preview > 0 && img_debug != null)
+                    {
+                        if (line_left != null) DrawLineColorBox(img_debug, 0, line_left.color);
+                        if (line_center != null) DrawLineColorBox(img_debug, 1, line_center.color);
+                        if (line_right != null) DrawLineColorBox(img_debug, 2, line_right.color);
+
+                        Cv2.Rectangle(img_debug, new Rect(20, 110, 170, 30), new Scalar(0, 0, 0), -1);
+                        img_debug.PutText("TIMER=" + ocr_digits_calc + "/" + ocr.ocrTimerText, new Point(20, 130), HersheyFonts.HersheySimplex, 0.6, new Scalar(255, 255, 255));
+                    }
+
+
+
+                    if (next_move_pause > 0) { next_move_pause--; }
+
 
                     //Console.WriteLine($"R={R(line_left.color)}");
                     //Bot Logic
@@ -348,7 +393,7 @@ namespace BarrierX_NagiBot
                     //if ((R(c1.R > 240 && c1.G > 90) && (c2.R > 240 && c2.G > 90))
                     //if ((R(c1) > 240 && G(c1) > 90) && (R(c2) > 240 && G(c2) > 90))
                     //if (1==2)
-                    if (!skip && R(line_center.color) > 240 && G(line_center.color) > 90)
+                    if (!skip && !config.DebugNoControls && R(line_center.color) > 220 && G(line_center.color) > 70)
                     {
                         Console.WriteLine("RED      ");
                         //Console.SetCursorPosition(0, 1);
@@ -362,6 +407,12 @@ namespace BarrierX_NagiBot
                             if (R(line_center.color) + G(line_center.color) > R(line_left.color) + G(line_left.color)) {
                                 sendLeft();
                                 Console.WriteLine("Controls: Left     ");
+                                if ((config.DebugSaveFrames == 2 && time1-debug_frame_time> debug_next_frame_delay) || config.DebugSaveFrames == 4) {
+                                    img.ImWrite(String.Format("screen{0:d4}_left.png", debug_frames_count));
+                                    if (config.Preview > 0 && img_debug != null) { img_debug.ImWrite(String.Format("screen{0:d4}_debug.png", debug_frames_count)); }
+                                    debug_frames_count++;
+                                    debug_frame_time = time1;
+                                }
                             }
                         }
                         else
@@ -370,33 +421,49 @@ namespace BarrierX_NagiBot
                             {
                                 sendRight();
                                 Console.WriteLine("Controls: Right    ");
+                                if ((config.DebugSaveFrames == 2 && time1 - debug_frame_time > debug_next_frame_delay) || config.DebugSaveFrames == 4) {
+                                    img.ImWrite(String.Format("screen{0:d4}_right.png", debug_frames_count));
+                                    if (config.Preview > 0 && img_debug!=null) { img_debug.ImWrite(String.Format("screen{0:d4}_debug.png", debug_frames_count));  }
+                                    debug_frames_count++;
+                                    debug_frame_time = time1;
+                                }
                             }
                         }
                     }
                     else
                     {
                         //if (isBlack(c2) || isBlack(c1))
-                        if (1==2)
+                        if (config.AutoRestart && detector.isGameOver)
                         {
                             sendOk();
                             //Console.SetCursorPosition(0, 2);
-                            Console.WriteLine("RESPAWN ?");
+                            Console.WriteLine("RESPAWN ?   ");
                         }
                     }
                     // */
 
-                    if (configPreview > 0) {
-                        if (configPreview == 2) img_debug = DoPyrDown(img_debug);
+
+
+                    if (config.Preview > 0 && img_debug != null) {
+                        if (config.Preview == 2) img_debug = DoPyrDown(img_debug);
                         Cv2.ImShow("debug", img_debug);
                         //img_debug.Release();
                     }
                     img.Release();
+                    //if (line_center != null) { line_center.contour.Release(); line_center.mask.Release(); }
+                    //if (line_left != null) { line_left.contour.Release(); line_left.mask.Release(); }
+                    //if (line_right != null) { line_right.contour.Release(); line_right.mask.Release(); }
+                    if (line_center != null) { line_center.mask.Release(); }
+                    if (line_left != null) { line_left.mask.Release(); }
+                    if (line_right != null) { line_right.mask.Release(); }
+                    if (config.Preview > 0 && img_debug != null) { img_debug.Release(); }
+
 
                     Console.WriteLine("                                             \n                                             \n                                             \n                                             ");
 
                     // Clean
                     //Console.WriteLine("                    \n                    ");
-                    Thread.Sleep(configTimeout);
+                    Thread.Sleep(config.Timeout);
                     // */
 
                     // fps calc
@@ -431,227 +498,16 @@ namespace BarrierX_NagiBot
 
         }
 
-        public static List<GameObject> FindByWhiteMask(Mat src, Mat preview) {
-            // thresh = cv2.inRange(image, (210, 210, 210), (255, 255, 255))
-            var thresh = new Mat();
-            Cv2.InRange(src, new Scalar(210, 210, 210), new Scalar(255, 255, 255), thresh);
-            // cv2.imshow("edges", thresh)
-            //_, cnts, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-            //thresh.DrawContours()
 
-            Mat[] contours = null;
-            Mat dst = new Mat();
-            //Cv2.FindContours(edged, out contours, new Mat(), RetrievalModes.List, ContourApproximationModes.ApproxSimple);
-            Cv2.FindContours(thresh, out contours, dst, RetrievalModes.List, ContourApproximationModes.ApproxNone);
-            //Cv2.ImShow("dst", dst);
-            //Cv2.ImShow("dst", dst);
-            //Cv2.ImShow("thresh", thresh);
-            dst.Release();
-            thresh.Release();
-
-            List<GameObject> list_result = new List<GameObject>();
-
-            if (contours != null)
-            {
-                Console.WriteLine("contours.size= " + contours.Length);
-
-                for (int i = 0; i < contours.Length; i++)
-                {
-                    Mat contour = contours[i];
-                    double area = Cv2.ContourArea(contour);
-
-                    // if the contour is not sufficiently large, ignore it
-                    if (area < 10) continue;
-
-                    double peri = Cv2.ArcLength(contour, true);
-                    Mat approx = contour.ApproxPolyDP(0.04 * peri, true);
-
-                    // Point p2f= approx.Get<Point>(0, 1);
-                    // Console.WriteLine("p2x= " + p2f.X + ", " + p2f.Y);
-                    // Console.WriteLine("cols= "+ approx.Cols + ", rows= " + approx.Rows);
-                    //
-                    // Point[] points_approx = new Point[approx.Rows];
-                    // for (int j = 0; j < approx.Rows; j++) {
-                    //     points_approx[j] = approx.Get<Point>(0, j);
-                    // }
-
-                    if (configPreview > 0) Cv2.Polylines(preview, approx, true, new Scalar(0, 255, 0), 4);
-
-                    //Rect rect = Cv2.BoundingRect(contour);
-                    //Cv2.Rectangle(preview, rect, new Scalar(0, 255, 0));
-
-                    // https://csharp.hotexamples.com/examples/OpenCvSharp/RotatedRect/-/php-rotatedrect-class-examples.html
-                    // https://stackoverflow.com/questions/43342199/draw-rotated-rectangle-in-opencv-c
-                    RotatedRect rrect = Cv2.MinAreaRect(contour);
-                    Point2f[] points2f = rrect.Points();
-                    if (configPreview > 0) PolylinesPoints2f(preview, points2f);
-
-                    double h = ImUtils.distance(points2f[0], points2f[1]);
-                    double w = ImUtils.distance(points2f[0], points2f[3]);
-                    double ratio = h / w;
-                    if (h>w) ratio = w / h;
-
-                    // compute the center of the contour
-                    Moments m = Cv2.Moments(contour);
-                    Point pt_center = new Point((int)(m.M10 / m.M00), (int)(m.M01 / m.M00));
-                    if (configPreview > 0) Cv2.Circle(preview, pt_center, 5, new Scalar(255, 0, 0), -1);
-
-
-                    //Console.Write(", " + Cv2.ContourArea(contour));
-                    // if (Cv2.ContourArea(contour) > max_val && Cv2.ContourArea(contour) < 408)
-                    // {
-                    //    max_val = Cv2.ContourArea(contour);
-                    //    max_i = i;
-                    //    //Cv2.DrawContours(image, contours, i, new Scalar(255, 128, 128), 5);
-                    // }
-                    //Cv2.DrawContours(image, contours, i, new Scalar(255, 128, 128), 5);
-
-                    // https://metanit.com/sharp/tutorial/7.5.php
-                    //Console.WriteLine($"object: area={(int)area,5}, pts_count={approx.Rows,3}, ratio= {ratio:f4}, center={pt_center}              ");
-
-                    if (ratio > 0.05)
-                    {
-                        GameObject obj = new GameObject(contour, area, approx, pt_center, ratio);
-                        list_result.Add(obj);
-                    }
-                        
-                    
-                }
-            }
-
-            //if (configPreview!=0) {
-            //    Cv2.DrawContours(preview, contours, -1, new Scalar(0, 255, 0), 2);
-            //}
-
-            return list_result;
-        }
-
-        public static void PolylinesPoints2f(Mat img, Point2f[] points2f) {
-            // https://stackoverflow.com/questions/35969667/how-to-use-the-opencvsharp-3-polylines-fillpoly-library-function
-            List<List<Point>> listOfListOfPoint = new List<List<Point>>();
-            List<Point> points = new List<Point>();
-            listOfListOfPoint.Add(points);
-            for (int i = 0; i < points2f.Length; i++)
-            {
-                Point p = new Point((int)points2f[i].X, (int)points2f[i].Y);
-                points.Add(p);
-            }
-
-            Cv2.Polylines(img, listOfListOfPoint, true, new Scalar(0, 255, 0), 4);
-        }
-
-        public static Player FindPlayer(List<GameObject> list_obj)
-        {
-            int i_player = -1;
-            int max_y = 0;
-            GameObject obj;
-            for (int i = 0; i < list_obj.Count; i++)
-            {
-                obj = list_obj[i];
-
-                if (obj.center.Y > max_y             // объект должен быть снизу других
-                    && obj.center.Y > screenCenter.Y // должен быть в нижней половине экрана
-                    && obj.points_approx.Rows > 2    // у него должно быть более 2 точек
-                    && obj.area > 100                // должен быть относительно крупный
-                    )
-                {
-                    max_y = obj.center.Y;
-                    i_player = i;
-                }
-            }
-
-            if (i_player == -1) {
-                return null;
-            }
-
-            obj = list_obj[i_player];
-            Player player = new Player(obj);
-            player.pt_up = NearestPoint(obj.points_approx, screenCenter);
-            player.pt_left = NearestPoint(obj.points_approx, screenLeft);
-            player.pt_right = NearestPoint(obj.points_approx, screenRight);
-            return player;
-        }
-
-        // возвращает ближайшую к ptB точку
-        public static Point NearestPoint(Mat points, Point ptB)
-        {
-            double[] dists = new double[points.Rows];
-            int i_min = 0;
-            for (int i = 0; i < points.Rows; i++) {
-                dists[i] = ImUtils.distance(points.Get<Point>(0, i), ptB);
-                if (dists[i] < dists[i_min]) { i_min = i; }
-            }
-
-            return points.Get<Point>(0, i_min);
-        }
-
-        public static Line FindLine(Mat src, Point seed, Mat preview)
-        {
-            // https://stackoverflow.com/questions/44063407/opencvsharp-2-floodfill-is-broken-and-corrupts-output-mask
-            Mat mask = new Mat(src.Rows + 2, src.Cols + 2, MatType.CV_8UC1, new Scalar(0, 0, 0, 0));
-            // floodflags = 4
-            // #floodflags |= cv2.FLOODFILL_MASK_ONLY
-            // floodflags |= (255 << 8)
-            //FloodFillFlags flags = FloodFillFlags.Link4 | FloodFillFlags.MaskOnly | FloodFillFlags.FixedRange;
-            // num,im,mask,rect = cv2.floodFill(orig2, mask, seed, (255,255,0), (5,)*3, (5,)*3, floodflags)
-            Rect rect = new Rect();
-            int flags = (int)FloodFillFlags.Link4 | (int)FloodFillFlags.MaskOnly | (255 << 8);
-            Cv2.FloodFill(src, mask, seed, new Scalar(255, 255, 0), out rect, new Scalar(5, 5, 5), new Scalar(5, 5, 5), flags);
-            Mat mask2 = new Mat(mask, new Rect(new Point(1,1), new Size(src.Cols, src.Rows)));
-            mask.Release();
-
-            Scalar color_line = Cv2.Mean(src, mask2);
-            // Mat mat_color = new Mat(50, 250, MatType.CV_8UC3, color_line);
-            // Cv2.ImShow("color", mat_color);
-
-            // (_, cnts2, _) = cv2.findContours(mask_roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-            Mat[] contours = null;
-            Mat dst = new Mat();
-            Cv2.FindContours(mask2, out contours, dst, RetrievalModes.External, ContourApproximationModes.ApproxNone);
-            //Cv2.ImShow("dst", dst);
-            dst.Release();
-
-            //Console.WriteLine($"line_contour_len={contours.Length}");
-            Mat approx = null;
-            if (contours.Length > 0) {
-                double peri = Cv2.ArcLength(contours[0], true);
-                approx = contours[0].ApproxPolyDP(0.04 * peri, true);
-                //Console.WriteLine($"points_n={approx.Rows}");
-            }
-
-            if (configPreview > 0) {
-                Cv2.DrawContours(preview, contours, -1, new Scalar(0, 255, 255), 2);
-                Cv2.Polylines(preview, approx, true, new Scalar(255, 0, 255), 7);
-            }
-
-            Point line_up = NearestPoint(approx, screenCenter);
-            Point line_left = NearestPoint(approx, screenLeft);
-            Point line_right = NearestPoint(approx, screenRight);
-
-            if (configPreview > 0) {
-                Cv2.Circle(preview, line_up, 5, new Scalar(120, 255, 120), -1);
-                Cv2.Circle(preview, line_left, 5, new Scalar(120, 255, 120), -1);
-                Cv2.Circle(preview, line_right, 5, new Scalar(120, 255, 120), -1);
-            }
-
-            //Cv2.ImShow("mask", mask2);
-            //Cv2.ImShow("src", src);
-            // Console.WriteLine($"mask_size={mask2.Cols} x {mask2.Rows}   ");
-            Console.WriteLine($"line_contour_len={contours.Length}, points_n={approx.Rows}, color={color_line}      ");
-
-            //mask2.Release();
-
-            return new Line(mask2, contours[0], approx, color_line, line_up, line_left, line_right);
-        }
 
         public static void DrawLineColorBox(Mat preview, int index, Scalar color)
         {
-            Cv2.Rectangle(preview, new Rect(20 + index * 80, 20, 40, 80), new Scalar(0, 0, 0), -1);
+            Cv2.Rectangle(preview, new Rect(20 + index * 80, 20, 40, 80), Colors.black, -1);
             Cv2.Rectangle(preview, new Rect(20 + index * 80 + 4, 20 + 4, 40 - 8, 40 - 8), color, -1);
 
-            preview.PutText("R=" + (int)color[2], new Point(20 + index * 80 + 4, 60+7), HersheyFonts.HersheySimplex, 0.4, new Scalar(255, 255, 255));
-            preview.PutText("G=" + (int)color[1], new Point(20 + index * 80 + 4, 60+20), HersheyFonts.HersheySimplex, 0.4, new Scalar(255, 255, 255));
-            preview.PutText("B=" + (int)color[0], new Point(20 + index * 80 + 4, 60+33), HersheyFonts.HersheySimplex, 0.4, new Scalar(255, 255, 255));
+            preview.PutText("R=" + (int)color[2], new Point(20 + index * 80 + 4, 60+7), HersheyFonts.HersheySimplex, 0.4, Colors.white);
+            preview.PutText("G=" + (int)color[1], new Point(20 + index * 80 + 4, 60+20), HersheyFonts.HersheySimplex, 0.4, Colors.white);
+            preview.PutText("B=" + (int)color[0], new Point(20 + index * 80 + 4, 60+33), HersheyFonts.HersheySimplex, 0.4, Colors.white);
 
 
             //using (CvFont font = new CvFont(FontFace.HersheySimplex, 0.7, 0.7, 0, 1, LineType.AntiAlias))
@@ -667,9 +523,11 @@ namespace BarrierX_NagiBot
         }
 
 
+
+
         // 
         // https://stackoverflow.com/questions/34139450/getwindowrect-returns-a-size-including-invisible-borders
-        static Mat grab_screen2()
+        static Mat grab_screen2(Config config)
         {
             //border should be `7, 0, 7, 7`
             // offset
@@ -687,16 +545,17 @@ namespace BarrierX_NagiBot
             }
             //System.Drawing.Rectangle bounds = new System.Drawing.Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
 
-            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(configWidth, configHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(config.Width, config.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             //Console.WriteLine("Size= " + bounds.Size + "           ");
             using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bmp))
             {
-                graphics.CopyFromScreen(rect.Left + configOffsetLeft, rect.Top + configOffsetTop, 0, 0,
-                    new System.Drawing.Size(configWidth, configHeight), System.Drawing.CopyPixelOperation.SourceCopy);
+                graphics.CopyFromScreen(rect.Left + config.OffsetLeft, rect.Top + config.OffsetTop, 0, 0,
+                    new System.Drawing.Size(config.Width, config.Height), System.Drawing.CopyPixelOperation.SourceCopy);
             }
 
             //преобразование из bitmap (требуется подключение OpenCvSharp.Extensions)
-            Mat res = bmp.ToMat();
+            Mat res = new Mat(new Size(config.Width, config.Height), MatType.CV_8UC3);
+            bmp.ToMat(res);
             bmp.Dispose();
 
             return res;
@@ -744,18 +603,22 @@ namespace BarrierX_NagiBot
             return (int)color[0];
         }
 
-
+        static int next_move_pause = 0;
 
         static void sendLeft()
         {
+            if (next_move_pause != 0) return;
             PostMessage(proc.MainWindowHandle, WM_KEYUP, VK_A, 0);
             PostMessage(proc.MainWindowHandle, WM_KEYDOWN, VK_A, 0xC14B0001);
+            next_move_pause = 2;
         }
 
         static void sendRight()
         {
+            if (next_move_pause != 0) return;
             PostMessage(proc.MainWindowHandle, WM_KEYDOWN, VK_D, 0);
             PostMessage(proc.MainWindowHandle, WM_KEYUP, VK_D, 0xC14B0001);
+            next_move_pause = 2;
         }
 
         static void sendOk()

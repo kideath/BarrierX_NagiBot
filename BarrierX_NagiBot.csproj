@@ -64,12 +64,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Colors.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="FillLineDetector.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="ImUtils.cs" />
     <Compile Include="Line.cs" />
+    <Compile Include="OCR.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RotatedLineDetector.cs" />
+    <Compile Include="Samples.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
